@@ -27,32 +27,7 @@ This project is a Minimum Viable Product (MVP).
 
 In short, this is a complete MVP, not an incomplete or placeholder project. It demonstrates a full LLM-powered content strategy pipeline that you can run and experiment with.
 
-3️⃣ Architecture Overview
-      +-------------------+
-      |   planner.md      |  <- Jinja2 prompt template
-      +-------------------+
-                |
-                v
-      +-------------------+
-      | render_prompt()   |  <- Renders template with company/year/max_ideas
-      +-------------------+
-                |
-                v
-      +-------------------+
-      |  call_chatgpt()   |  <- LLM Agent call (OpenAI API)
-      +-------------------+
-                |
-                v
-      +-------------------+
-      | parse_llm_output()|  <- Pydantic validation (ContentIdea)
-      +-------------------+
-                |
-                v
-      +-------------------+
-      | export_to_word()  |  <- Word export (outputs/)
-      +-------------------+
-
-4️⃣ Future Directions
+3️⃣ Future Directions
 This MVP lays the foundation for LLM-powered content strategy generation, but there are several exciting avenues for further enhancement:
 
 1. Agent-Oriented Workflow
