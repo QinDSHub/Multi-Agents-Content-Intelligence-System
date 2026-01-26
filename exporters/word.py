@@ -29,7 +29,6 @@ def export_to_word(columns, data, file_path, company_name):
     doc = Document()
     doc.add_heading(f"{company_name} Content Strategy Plan", 0)
     for idx, item in enumerate(data):
-        # 直接使用属性
         doc.add_heading(getattr(item, columns[0]), level=1)
         doc.add_paragraph("Key Insights:\n" + "\n".join(item.key_insights))
         doc.add_paragraph("Objective:\n" + item.target_objective)
