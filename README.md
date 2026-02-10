@@ -1,5 +1,5 @@
 
-# Multi-Agent Content Intelligence System
+# Multi-Agent Marketing Content Intelligence System
 
 This project implements a multi-agent content intelligence pipeline built with LangChain and LangGraph, designed to generate high-quality, publish-ready industry content while minimizing hallucinations, controlling GenAI costs, and improving operational efficiency.
 
