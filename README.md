@@ -1,104 +1,124 @@
-# 6_MULTI_AGENTS Optimized
+A Multi-Agent Intelligent Marketing System Based on LangChain and LangGraph
+Abstract
 
-Multi-agent workflow built with LangGraph for researching industry reports, extracting insights, ranking them, generating marketing content, and optionally distributing posts to Facebook.
+This repository presents Version 3.0 of a multi-agent intelligent marketing system that implements a closed-loop, end-to-end automation pipeline for marketing intelligence and content operations. The system integrates retrieval-augmented generation (RAG), structured multi-agent orchestration, and human-in-the-loop (HITL) validation to support reliable insight extraction, content generation, automated publishing, and post-publication performance analysis.
 
-## What this project does
+Built upon LangChain and LangGraph, the proposed architecture emphasizes modularity, grounding, and extensibility, enabling controlled large language model (LLM) deployment in real-world marketing workflows. Compared with earlier versions, this iteration focuses on architectural optimization, explicit agent responsibility boundaries, and improved reproducibility.
 
-- Searches the web for relevant industry reports.
-- Builds a vector retriever and summarizes insights (map -> reduce -> rank).
-- Generates publishable marketing content from ranked insights.
-- Supports a manual review gate before automated distribution.
+1. System Overview
 
-## Architecture
+The proposed system adopts a sequential multi-agent architecture, in which each agent is responsible for a well-defined stage in the marketing intelligence lifecycle. Agents communicate via structured outputs validated by Pydantic schemas, ensuring consistency and robustness across the pipeline.
 
-Nodes are defined in [src/agent/graph.py](src/agent/graph.py):
+The complete workflow forms a closed feedback loop, beginning with external and internal knowledge acquisition and ending with automated performance evaluation to support iterative strategy refinement.
 
-1. research: search and build retriever
-2. map: extract raw insights
-3. reduce: synthesize strategic insights
-4. rank: score and order insights
-5. content_generator: generate marketing content
-6. distributor: post to Facebook (optional, gated)
+2. Agent Architecture and Pipeline
+2.1 Search Agent
 
-## Setup
+The Search Agent retrieves professional and industry-grade textual sources to ground downstream reasoning and mitigate hallucination risks in LLM-generated outputs.
 
-### Install
+External information is collected using Google SerpAPI.
 
-```bash
-cd d:/projects/6_multi_agents_optimized
-pip install -e . "langgraph-cli[inmem]"
-```
+Retrieved documents serve as authoritative references for subsequent retrieval and generation tasks.
 
-### Environment variables
+2.2 Search Document Loader Agent
 
-Create a .env file in the project root:
+This agent extracts raw textual content from URLs provided by the Search Agent and applies standardized preprocessing procedures, including text cleaning, normalization, and noise removal.
 
-```text
-OPENAI_API_KEY=your_key
-OPENAI_BASE_URL=https://api.openai.com/v1
+2.3 Local Document Loader Agent
 
-# Optional if you integrate Tavily later
-TAVILY_API_KEY=your_key
-TAVILY_BASE_URL=https://api.tavily.com
-```
+To support domain-specific and proprietary knowledge integration, the Local Document Loader Agent enables users to upload PDF documents from local storage. These documents undergo the same preprocessing pipeline as externally sourced materials, ensuring uniform representation.
 
-### Run the LangGraph server
+2.4 Retrieval-Augmented Generation (RAG) Agent
 
-```bash
-langgraph dev
-```
+The RAG Agent implements a Map–Reduce-style retrieval framework:
 
-### Run locally (example)
+Map Phase
 
-```bash
-python -m agent.graph
-```
+Document chunking and embedding
 
-You will see a manual confirmation prompt before any distribution action.
+Vector storage using a temporary Chroma database
 
-## Quickstart (sample inputs)
+Sources include both online documents and locally uploaded files
 
-The default demo values are in [src/agent/graph.py](src/agent/graph.py). You can change them directly or pass a custom state when running in a script.
+Reduce Phase
 
-Example state values you can use:
+Semantic retrieval and ranking of the most relevant document chunks in response to user queries
 
-```python
-initial_state = {
-	"company": "OpenAI",
-	"year": "2025",
-	"period": "full year",
-	"steps": [],
-	# Optional for distribution:
-	# "page_id": "YOUR_FACEBOOK_PAGE_ID",
-	# "fb_access_token": "YOUR_ACCESS_TOKEN",
-}
-```
+This design grounds LLM reasoning in retrieved evidence and improves factual consistency.
 
-If you set `page_id` and `fb_access_token`, the distributor node can post after you confirm.
+2.5 Insights Agent
 
-## Troubleshooting
+The Insights Agent synthesizes retrieved information into a concise set of five high-level, actionable insights. These insights function as an intermediate semantic abstraction layer, decoupling knowledge retrieval from content generation.
 
-- Search returns empty results: Google HTML can change or rate limit. Try again later or swap in a paid search API.
-- `OPENAI_API_KEY` missing: ensure your .env is in the project root and `dotenv` loads it.
-- `No data retrieved from search`: verify search results are non-empty and the network is available.
-- Facebook post fails: confirm `page_id` and `fb_access_token` are valid and have publish permissions.
-- Cache conflicts: delete the `.agent_cache` folder to reset cached outputs.
+2.6 Content Generation Agent
 
-## Notes
+The Content Generation Agent produces publication-ready marketing content using strictly structured outputs defined via Pydantic schemas. The output schema includes:
 
-- The search utility uses Google HTML parsing and can be rate limited. For production, consider a dedicated search API.
-- Retriever building stores embeddings in memory for each run.
-- Simple disk caching is used in .agent_cache for map/reduce/rank results.
+Insight identifier linkage
 
-## Project structure
+Content format specification (e.g., article, blog, case study)
 
-- [src/agent/graph.py](src/agent/graph.py): graph definition and entry point
-- [src/agent/services/multi_agents.py](src/agent/services/multi_agents.py): LLM agents and Facebook distributor
-- [src/agent/services/rag.py](src/agent/services/rag.py): retrieval helpers
-- [src/agent/services/tools.py](src/agent/services/tools.py): search helper
-- [src/agent/services/utils.py](src/agent/services/utils.py): cache helpers
-- [src/agent/services/schemas.py](src/agent/services/schemas.py): pydantic models
+Headline and full textual body
 
-## Safety
+Call-to-action and target audience definition
 
-This project includes a manual confirmation step before publishing to social media. Ensure your access tokens and page IDs are stored securely.
+Recommended distribution channels
+
+Explicit source references
+
+While the current implementation focuses on text generation, the architecture supports future extensions to multimodal generation (e.g., video scripts, visual assets) and multilingual content production via additional agents.
+
+2.7 Human-in-the-Loop (HITL)
+
+To ensure quality control and ethical deployment, a Human-in-the-Loop mechanism is incorporated. Generated content undergoes manual review, validation, and optional revision before publication, ensuring alignment with organizational standards.
+
+2.8 Auto Publish Agent
+
+The Auto Publish Agent schedules and disseminates approved content across social media or marketing platforms.
+
+A Facebook API integration is provided as a reference implementation.
+
+The design is platform-agnostic and supports extensibility.
+
+2.9 Auto Analysis Report Agent
+
+Following publication, the Auto Analysis Report Agent generates analytical summaries evaluating engagement metrics, effectiveness, and return on investment (ROI). These reports enable data-driven optimization of future marketing strategies, closing the system feedback loop.
+
+3. Design Principles
+
+The system is guided by the following design principles:
+
+Modularity: Each agent is independently extensible and replaceable
+
+Grounded Generation: RAG is employed to constrain LLM outputs to retrieved evidence
+
+Structured Communication: Pydantic schemas enforce data consistency across agents
+
+Human Oversight: HITL safeguards are integrated at critical decision points
+
+Version 3.0 prioritizes architectural clarity and experimental reproducibility. Production-level optimizations such as asynchronous execution, caching, and persistent long-term memory are intentionally excluded to maintain research focus.
+
+4. Implementation Details
+4.1 Technology Stack
+
+Python 3.12.7
+
+chromadb 1.4.1
+
+langchain 1.2.8
+
+langchain-openai 1.1.7
+
+langgraph 1.0.7
+
+openai 2.17.0
+
+5. GenAI Assistance Disclosure
+
+The system architecture, agent design, and implementation were independently developed by the author.
+
+GitHub Copilot was used solely for code optimization support
+
+ChatGPT was used exclusively for academic-style language refinement and documentation editing
+
+All technical decisions, experimental design, and final system outputs remain the responsibility of the author.
