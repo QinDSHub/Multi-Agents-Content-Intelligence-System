@@ -35,19 +35,19 @@ To support domain-specific and proprietary knowledge integration, the Local Docu
 
 The RAG Agent implements a Map–Reduce-style retrieval framework:
 
-Map Phase
+*** Map Phase ***
 
-Document chunking and embedding
+- Document chunking and embedding
 
-Vector storage using a temporary Chroma database
+- Vector storage using a temporary Chroma database
 
-Sources include both online documents and locally uploaded files
+- Sources include both online documents and locally uploaded files
 
-Reduce Phase
+*** Reduce Phase ***
 
-Semantic retrieval and ranking of the most relevant document chunks in response to user queries
+- Semantic retrieval and ranking of the most relevant document chunks in response to user queries
 
-This design grounds LLM reasoning in retrieved evidence and improves factual consistency.
+- This design grounds LLM reasoning in retrieved evidence and improves factual consistency.
 
 ### **Insights Agent**
 
@@ -57,17 +57,17 @@ The Insights Agent synthesizes retrieved information into a concise set of five 
 
 The Content Generation Agent produces publication-ready marketing content using strictly structured outputs defined via Pydantic schemas. The output schema includes:
 
-Insight identifier linkage
+- Insight identifier linkage
 
-Content format specification (e.g., article, blog, case study)
+- Content format specification (e.g., article, blog, case study)
 
-Headline and full textual body
+- Headline and full textual body
 
-Call-to-action and target audience definition
+- Call-to-action and target audience definition
 
-Recommended distribution channels
+- Recommended distribution channels
 
-Explicit source references
+- Explicit source references
 
 While the current implementation focuses on text generation, the architecture supports future extensions to multimodal generation (e.g., video scripts, visual assets) and multilingual content production via additional agents.
 
@@ -93,13 +93,13 @@ Following publication, the Auto Analysis Report Agent generates analytical summa
 
 The system is guided by the following design principles:
 
-Modularity: Each agent is independently extensible and replaceable
+- Modularity: Each agent is independently extensible and replaceable
 
-Grounded Generation: RAG is employed to constrain LLM outputs to retrieved evidence
+- Grounded Generation: RAG is employed to constrain LLM outputs to retrieved evidence
 
-Structured Communication: Pydantic schemas enforce data consistency across agents
+- Structured Communication: Pydantic schemas enforce data consistency across agents
 
-Human Oversight: HITL safeguards are integrated at critical decision points
+- Human Oversight: HITL safeguards are integrated at critical decision points
 
 Version 3.0 prioritizes architectural clarity and experimental reproducibility. Production-level optimizations such as asynchronous execution, caching, and persistent long-term memory are intentionally excluded to maintain research focus.
 
@@ -126,8 +126,6 @@ openai 2.17.0
 
 The system architecture, agent design, and implementation were independently developed by the author.
 
-GitHub Copilot was used solely for code optimization support
-
-ChatGPT was used exclusively for academic-style language refinement and documentation editing
+GitHub Copilot was used solely for code optimization support while ChatGPT was used exclusively for academic-style language refinement and documentation editing.
 
 All technical decisions, experimental design, and final system outputs remain the responsibility of the author.
