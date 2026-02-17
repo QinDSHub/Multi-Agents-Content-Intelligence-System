@@ -124,8 +124,4 @@ Version 3.0 prioritizes architectural clarity and experimental reproducibility. 
 
 ## GenAI Assistance Disclosure
 
-The system architecture, agent design, and implementation were independently developed by the author.
-
-GitHub Copilot was used solely for code optimization support while ChatGPT was used exclusively for academic-style language refinement and documentation editing.
-
-All technical decisions, experimental design, and final system outputs remain the responsibility of the author.
+The system architecture, agent design, and implementation were independently conceived and developed by the author. Generative AI tools were employed in a supportive capacity with: GitHub Copilot was used to assist with code refactoring and optimization, while ChatGPT was utilized exclusively for academic-style language refinement and documentation editing. All technical decisions, system logic, and intellectual contributions remain solely attributable to the author.
