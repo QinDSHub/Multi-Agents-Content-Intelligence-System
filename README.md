@@ -1,4 +1,4 @@
-# A Multi-Agent Intelligent Marketing System Based on LangChain and LangGraph
+# A Multi-Agent Intelligent Marketing System
 
 This repository presents Version 3.0 of a multi-agent intelligent marketing system that implements a closed-loop, end-to-end automation pipeline for marketing intelligence and content operations. The system integrates retrieval-augmented generation (RAG), structured multi-agent orchestration, and human-in-the-loop (HITL) validation to support reliable insight extraction, content generation, automated publishing, and post-publication performance analysis.
 
